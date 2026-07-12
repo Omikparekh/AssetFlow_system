@@ -14,25 +14,25 @@ erDiagram
     USER ||--o{ ALLOCATION : "allocated to"
     USER ||--o{ BOOKING : "books"
     USER ||--o{ MAINTENANCE_REQUEST : "requests"
-    
+
     ASSET_CATEGORY ||--o{ ASSET : "categorizes"
     ASSET_BRAND ||--o{ ASSET_MODEL : "makes"
     ASSET_MODEL ||--o{ ASSET : "model of"
-    
+
     ASSET ||--o{ ASSET_STATUS_HISTORY : "tracks"
     ASSET ||--o{ ALLOCATION : "assigned via"
     ASSET ||--o{ TRANSFER_REQUEST : "transferred via"
     ASSET ||--o{ MAINTENANCE_REQUEST : "repaired via"
     ASSET ||--o{ AUDIT_ITEM : "audited in"
     ASSET ||--o{ DISCREPANCY_REPORT : "flagged in"
-    
+
     MAINTENANCE_REQUEST ||--o{ MAINTENANCE_LOG : "has logs"
     TECHNICIAN ||--o{ MAINTENANCE_REQUEST : "assigned to"
     VENDOR ||--o{ MAINTENANCE_REQUEST : "services"
-    
+
     AUDIT_CYCLE ||--o{ AUDIT_ITEM : "contains"
     AUDIT_CYCLE }o--|| DEPARTMENT : "audits"
-    
+
     RESOURCE ||--o{ BOOKING : "scheduled via"
 ```
 
@@ -151,7 +151,7 @@ model User {
   status           UserStatus   @default(ACTIVE)
   mfaReady         Boolean      @default(false)
   lastLogin        DateTime?
-  
+
   departmentId     String?
   department       Department?  @relation(fields: [departmentId], references: [id], onDelete: SetNull)
 
@@ -189,12 +189,12 @@ model Department {
   departmentCode   String       @unique
   description      String?
   status           Boolean      @default(true)
-  
+
   // Hierarchy
   parentId         String?
   parent           Department?  @relation("DepartmentHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
   children         Department[] @relation("DepartmentHierarchy")
-  
+
   headId           String?
   head             User?        @relation("DepartmentHead", fields: [headId], references: [id], onDelete: SetNull) // Just a visual link, handled by Service logic
 
@@ -218,9 +218,9 @@ model AssetCategory {
   depreciationType String?
   metadataSchema   Json?        // Flexible schema for specific specs
   active           Boolean      @default(true)
-  
+
   assets           Asset[]
-  
+
   createdAt        DateTime     @default(now())
   updatedAt        DateTime     @updatedAt
   deletedAt        DateTime?
@@ -249,7 +249,7 @@ model Asset {
   serialNumber     String       @unique
   qrCode           String?      @unique
   barcode          String?      @unique
-  
+
   purchaseDate     DateTime?
   purchaseCost     Decimal?     @db.Decimal(10, 2)
   warrantyExpiry   DateTime?
@@ -257,7 +257,7 @@ model Asset {
   condition        Condition    @default(NEW)
   status           AssetStatus  @default(AVAILABLE)
   currentLocation  String?
-  
+
   // Metadata & Media
   image            String?
   invoice          String?
@@ -267,13 +267,13 @@ model Asset {
   // Foreign Keys
   categoryId       String
   category         AssetCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-  
+
   brandId          String?
   brand            AssetBrand?   @relation(fields: [brandId], references: [id], onDelete: Restrict)
-  
+
   modelId          String?
   model            AssetModel?   @relation(fields: [modelId], references: [id], onDelete: Restrict)
-  
+
   currentDeptId    String?
   currentDept      Department?   @relation(fields: [currentDeptId], references: [id], onDelete: SetNull)
 
@@ -320,7 +320,7 @@ model Allocation {
   asset            Asset        @relation(fields: [assetId], references: [id], onDelete: Restrict)
   userId           String
   user             User         @relation(fields: [userId], references: [id], onDelete: Restrict)
-  
+
   allocatedBy      String
   allocatedAt      DateTime     @default(now())
   expectedReturn   DateTime?
@@ -346,7 +346,7 @@ model TransferRequest {
   approvedBy       String?
   reason           String?
   status           TransferStatus @default(REQUESTED)
-  
+
   createdAt        DateTime     @default(now())
   updatedAt        DateTime     @updatedAt
   timeline         Json?        // Tracks status changes
@@ -363,7 +363,7 @@ model Resource {
   name             String
   description      String?
   isActive         Boolean      @default(true)
-  
+
   bookings         Booking[]
 
   createdAt        DateTime     @default(now())
@@ -377,7 +377,7 @@ model Booking {
   resource         Resource     @relation(fields: [resourceId], references: [id], onDelete: Restrict)
   userId           String
   user             User         @relation(fields: [userId], references: [id], onDelete: Restrict)
-  
+
   startDateTime    DateTime
   endDateTime      DateTime
   purpose          String?
@@ -417,20 +417,20 @@ model MaintenanceRequest {
   asset            Asset        @relation(fields: [assetId], references: [id], onDelete: Restrict)
   requestedById    String
   requestedBy      User         @relation("MaintenanceRequester", fields: [requestedById], references: [id], onDelete: Restrict)
-  
+
   priority         MaintenancePriority @default(MEDIUM)
   description      String
   status           MaintenanceStatus   @default(PENDING)
-  
+
   approvedBy       String?
   technicianId     String?
   technician       Technician?  @relation(fields: [technicianId], references: [id], onDelete: SetNull)
   vendorId         String?
   vendor           Vendor?      @relation(fields: [vendorId], references: [id], onDelete: SetNull)
-  
+
   estimatedCost    Decimal?     @db.Decimal(10, 2)
   actualCost       Decimal?     @db.Decimal(10, 2)
-  
+
   createdAt        DateTime     @default(now())
   updatedAt        DateTime     @updatedAt
   timeline         Json?
@@ -461,14 +461,14 @@ model AuditCycle {
   department       Department?  @relation(fields: [departmentId], references: [id], onDelete: SetNull)
   auditorId        String
   auditor          User         @relation("AuditAssignee", fields: [auditorId], references: [id], onDelete: Restrict)
-  
+
   startDate        DateTime
   endDate          DateTime
   status           AuditStatus  @default(DRAFT)
   lockFlag         Boolean      @default(false) // Becomes immutable
 
   items            AuditItem[]
-  
+
   createdAt        DateTime     @default(now())
   updatedAt        DateTime     @updatedAt
 }
@@ -479,7 +479,7 @@ model AuditItem {
   auditCycle       AuditCycle   @relation(fields: [auditCycleId], references: [id], onDelete: Restrict)
   assetId          String
   asset            Asset        @relation(fields: [assetId], references: [id], onDelete: Restrict)
-  
+
   expectedLocation String?
   actualLocation   String?
   condition        Condition?
@@ -531,7 +531,7 @@ model ActivityLog {
   ipAddress        String?
   userAgent        String?
   timestamp        DateTime     @default(now())
-  
+
   // No updateAt/deletedAt; Logs are immutable
 }
 ```
@@ -541,7 +541,8 @@ model ActivityLog {
 ## 3. Constraints & Relations
 
 ### Key Database Constraints
-1. **Uniqueness:** 
+
+1. **Uniqueness:**
    - `User`: `email`, `employeeCode`
    - `Asset`: `assetTag`, `serialNumber`, `qrCode`, `barcode`
 2. **Referential Integrity & Cascade Rules:**
@@ -556,6 +557,7 @@ model ActivityLog {
 ## 4. Indexing Strategy
 
 To support millions of records and ensure lightning-fast read operations, indexes have been carefully placed:
+
 - **`@@index([email])`, `@@index([employeeCode])`**: Speeds up user authentication and directory lookups.
 - **`@@index([assetTag])`, `@@index([serialNumber])`**: Critical for instant barcode/QR scanning and asset registry search.
 - **`@@index([status])`**: Optimizes the Dashboard API which frequently counts Available, Allocated, and Maintenance assets.
@@ -575,6 +577,7 @@ To support millions of records and ensure lightning-fast read operations, indexe
 ## 6. Seed Strategy
 
 A production-ready seed script (`prisma/seed.ts`) must generate:
+
 1. **Master Admin User:** Hardcoded initial superuser to prevent locking.
 2. **Default Organization:** Example Head Office department.
 3. **Core Asset Categories:** Laptops, Vehicles, Furniture with standard depreciation metrics.
@@ -585,6 +588,7 @@ A production-ready seed script (`prisma/seed.ts`) must generate:
 ## 7. Transactions
 
 Business logic inside the Express Services must utilize **Prisma Interactive Transactions (`prisma.$transaction`)** for:
+
 - **Allocation:** (1) Create Allocation record + (2) Update Asset status to `ALLOCATED` + (3) Write `AssetStatusHistory` + (4) Write `ActivityLog`.
 - **Booking Resolution:** Checking for time overlaps and inserting a Booking must occur under an isolation level that prevents race conditions.
 - **Audit Locking:** When an Audit is marked `LOCKED`, all connected `AuditItem` statuses must be solidified and discrepancies generated in a single atomic transaction.
