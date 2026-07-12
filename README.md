@@ -305,7 +305,7 @@ AssetFlow_system/
 │   ├── index.html
 │   └── vite.config.js
 │
-├── server/                          # Node.js Backend Application
+├── backend/                          # Node.js Backend Application
 │   ├── prisma/                      # Prisma schema and migrations
 │   │   └── schema.prisma
 │   ├── src/
