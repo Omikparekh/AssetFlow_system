@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const booking_controller_1 = require("../controllers/booking.controller");
+const auth_middleware_1 = require("../middlewares/auth.middleware");
+const router = (0, express_1.Router)();
+router.use(auth_middleware_1.authenticate);
+router.get("/availability", booking_controller_1.bookingController.availability);
+router.get("/", booking_controller_1.bookingController.list);
+router.post("/", booking_controller_1.bookingController.create);
+exports.default = router;

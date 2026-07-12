@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const department_controller_1 = require("../controllers/department.controller");
+const auth_middleware_1 = require("../middlewares/auth.middleware");
+const validate_middleware_1 = require("../middlewares/validate.middleware");
+const department_validator_1 = require("../validators/department.validator");
+const router = (0, express_1.Router)();
+router.get("/", auth_middleware_1.authenticate, (0, auth_middleware_1.requirePermission)("ViewDepartments"), department_controller_1.departmentController.listDepartments);
+router.get("/:id", auth_middleware_1.authenticate, (0, auth_middleware_1.requirePermission)("ViewDepartments"), department_controller_1.departmentController.getDepartment);
+router.post("/", auth_middleware_1.authenticate, (0, auth_middleware_1.requirePermission)("ManageDepartments"), (0, validate_middleware_1.validateRequest)({ body: department_validator_1.createDepartmentSchema }), department_controller_1.departmentController.createDepartment);
+router.put("/:id", auth_middleware_1.authenticate, (0, auth_middleware_1.requirePermission)("ManageDepartments"), (0, validate_middleware_1.validateRequest)({ body: department_validator_1.updateDepartmentSchema }), department_controller_1.departmentController.updateDepartment);
+router.delete("/:id", auth_middleware_1.authenticate, (0, auth_middleware_1.requirePermission)("ManageDepartments"), department_controller_1.departmentController.deleteDepartment);
+exports.default = router;

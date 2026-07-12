@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const allocation_controller_1 = require("../controllers/allocation.controller");
+const auth_middleware_1 = require("../middlewares/auth.middleware");
+const router = (0, express_1.Router)();
+router.use(auth_middleware_1.authenticate);
+router.get("/", allocation_controller_1.allocationController.listAllocations);
+router.post("/", allocation_controller_1.allocationController.createAllocation);
+router.post("/return", allocation_controller_1.allocationController.returnAllocation);
+router.post("/request-return", allocation_controller_1.allocationController.requestReturn);
+router.get("/requests", allocation_controller_1.allocationController.listReturnRequests);
+router.post("/requests/action", allocation_controller_1.allocationController.actionReturnRequest);
+exports.default = router;

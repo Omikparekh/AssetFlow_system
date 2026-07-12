@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const employee_controller_1 = require("../controllers/employee.controller");
+const auth_middleware_1 = require("../middlewares/auth.middleware");
+const validate_middleware_1 = require("../middlewares/validate.middleware");
+const employee_validator_1 = require("../validators/employee.validator");
+const router = (0, express_1.Router)();
+router.get("/", auth_middleware_1.authenticate, (0, auth_middleware_1.requirePermission)("ViewEmployees"), employee_controller_1.employeeController.listEmployees);
+router.get("/roles", auth_middleware_1.authenticate, employee_controller_1.employeeController.listRoles);
+router.get("/:id", auth_middleware_1.authenticate, (0, auth_middleware_1.requirePermission)("ViewEmployees"), employee_controller_1.employeeController.getEmployee);
+router.post("/", auth_middleware_1.authenticate, (0, auth_middleware_1.requirePermission)("ManageEmployees"), (0, validate_middleware_1.validateRequest)({ body: employee_validator_1.createEmployeeSchema }), employee_controller_1.employeeController.createEmployee);
+router.put("/:id", auth_middleware_1.authenticate, (0, auth_middleware_1.requirePermission)("ManageEmployees"), (0, validate_middleware_1.validateRequest)({ body: employee_validator_1.updateEmployeeSchema }), employee_controller_1.employeeController.updateEmployee);
+router.delete("/:id", auth_middleware_1.authenticate, (0, auth_middleware_1.requirePermission)("ManageEmployees"), employee_controller_1.employeeController.deleteEmployee);
+exports.default = router;

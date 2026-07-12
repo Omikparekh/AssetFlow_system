@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const maintenance_controller_1 = require("../controllers/maintenance.controller");
+const auth_middleware_1 = require("../middlewares/auth.middleware");
+const router = (0, express_1.Router)();
+router.use(auth_middleware_1.authenticate);
+router.get("/", maintenance_controller_1.maintenanceController.listRequests);
+router.post("/", maintenance_controller_1.maintenanceController.createRequest);
+router.put("/:id/status", maintenance_controller_1.maintenanceController.updateStatus);
+exports.default = router;
