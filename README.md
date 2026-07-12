@@ -290,37 +290,57 @@ graph LR
 
 ```
 AssetFlow_system/
-├── client/                          # React Frontend Application
-│   ├── public/                      # Static assets
+├── client/                               # React Frontend
 │   ├── src/
-│   │   ├── assets/                  # Images, icons, global styles
-│   │   ├── components/              # Reusable UI components
-│   │   ├── features/                # Feature modules (Assets, Bookings, Auth)
-│   │   ├── hooks/                   # Custom React hooks
-│   │   ├── layouts/                 # Page layout wrappers
-│   │   ├── pages/                   # Route entry points
-│   │   ├── services/                # API integration
-│   │   ├── store/                   # Global state management
-│   │   └── utils/                   # Helper functions
-│   ├── index.html
-│   └── vite.config.js
+│   │   ├── app/
+│   │   │   └── routes.tsx
+│   │   ├── components/                   # UI components (button, card, etc.)
+│   │   │   └── ui/                       # Shadcn UI components
+│   │   ├── contexts/                     # React contexts (Auth, Theme)
+│   │   ├── features/
+│   │   │   ├── assets/
+│   │   │   ├── allocations/
+│   │   │   ├── audits/
+│   │   │   ├── auth/
+│   │   │   ├── dashboard/
+│   │   │   ├── maintenance/
+│   │   │   ├── organization/
+│   │   │   └── settings/
+│   │   ├── layouts/                      # Layout wrappers
+│   │   ├── lib/
+│   │   ├── services/
+│   │   └── globals.css
+│   ├── package.json
+│   └── vite.config.ts
 │
-├── backend/                          # Node.js Backend Application
-│   ├── prisma/                      # Prisma schema and migrations
+├── backend/                              # Node.js Backend
+│   ├── src/
+│   │   ├── config/                       # Database, Redis, Storage configs
+│   │   ├── controllers/                  # Request handlers
+│   │   ├── dto/                          # Data transfer objects
+│   │   ├── errors/                       # Custom errors
+│   │   ├── mail/                         # Email service
+│   │   ├── middlewares/                  # Express middlewares
+│   │   ├── repositories/                 # Data access layer
+│   │   ├── routes/                       # API routes
+│   │   ├── services/                     # Business logic
+│   │   ├── utils/                        # Utilities (logger, response, activity)
+│   │   ├── validators/                   # Input validation
+│   │   ├── app.ts
+│   │   ├── server.ts
+│   │   └── index.ts
+│   ├── prisma/
 │   │   └── schema.prisma
-│   ├── src/
-│   │   ├── config/                  # Environment and service configs
-│   │   ├── controllers/             # Request handlers
-│   │   ├── middlewares/             # Express middlewares
-│   │   ├── routes/                  # API route definitions
-│   │   ├── services/                # Core business logic
-│   │   └── utils/                   # Error handlers, loggers
+│   ├── tests/
 │   ├── .env
-│   └── server.js
+│   └── package.json
 │
-├── package.json
-└── README.md
-```
+├── images/                               # Screenshots and diagrams
+├── backend.md                            # Backend documentation
+├── database.md                           # Database design documentation
+├── frontend.md                           # Frontend documentation
+├── LICENSE
+└── README.md```
 
 ---
 
