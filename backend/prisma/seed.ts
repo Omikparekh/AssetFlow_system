@@ -1,7 +1,6 @@
-import { PrismaClient, UserStatus } from "@prisma/client";
+import prisma, { pool } from "../src/config/database";
+import { UserStatus } from "@prisma/client";
 import bcrypt from "bcrypt";
-
-const prisma = new PrismaClient();
 
 async function main() {
   console.log("Seeding database...");
@@ -137,4 +136,5 @@ main()
   })
   .finally(async () => {
     await prisma.$disconnect();
+    await pool.end();
   });
